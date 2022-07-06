@@ -1,6 +1,6 @@
-## GEN: gin enhance
+## FEN: fiber enhance
 
-add some enhance feature for golang gin web framework
+add some enhance feature for golang fiber web framework
 
 ```golang
 var (
@@ -9,11 +9,11 @@ var (
 )
 
 func main() {
-	svc := gin.Default()
-	svc.GET("/user/:name", gen.Func(serve))
-	svc.GET("/data", gen.DataFunc(serveData))
-	svc.POST("/user/:id", gen.DataFunc2(serveUserUpdate,gen.Int("id", BusErr_GetParamFailed), gen.Bind(&User{})))
-	svc.Run(":888")
+	svc := fiber.New()
+	svc.Get("/user/:name", fen.Func(serve))
+	svc.Get("/data", fen.DataFunc(serveData))
+	svc.Post("/user/:id", fen.DataFunc2(serveUserUpdate,fen.Int("id", BusErr_GetParamFailed), fen.Bind(&User{})))
+	svc.Listen(":888")
 }
 
 func serve(ctx *gin.Context) error {
