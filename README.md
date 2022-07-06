@@ -16,15 +16,15 @@ func main() {
 	svc.Listen(":888")
 }
 
-func serve(ctx *gin.Context) error {
+func serve(ctx *fen.Ctx) error {
 	return BusErr_UserNotFound
 }
 
-func serveData(ctx *gin.Context) (User, error) {
+func serveData(ctx *fen.Ctx) (User, error) {
 	return User{Name: "John"}, nil
 }
 
-func serveUserUpdate(ctx *gin.Context, id int, user *User) (User, error) {
+func serveUserUpdate(ctx *fen.Ctx, id int, user *User) (User, error) {
 	return user, nil
 }
 ```
