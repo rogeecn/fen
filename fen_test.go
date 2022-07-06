@@ -31,27 +31,27 @@ var (
 	Err_Test = NewBusError(http.StatusBadRequest, 1001, "TestErr")
 )
 
-func (t *testApi) Func(ctx *fiber.Ctx) error {
+func (t *testApi) Func(ctx *Ctx) error {
 	return Err_Test.Wrap(errors.New("TestStack"))
 }
 
-func (t *testApi) FuncP1(ctx *fiber.Ctx, uid int) error {
+func (t *testApi) FuncP1(ctx *Ctx, uid int) error {
 	return Err_Test.Wrap(errors.New("TestStack"))
 }
 
-func (t *testApi) Data(ctx *fiber.Ctx) (*respUser, error) {
+func (t *testApi) Data(ctx *Ctx) (*respUser, error) {
 	return &respUser{Name: "TestName"}, nil
 }
 
-func (t *testApi) DataP1(ctx *fiber.Ctx, uid int) (*respUser, error) {
+func (t *testApi) DataP1(ctx *Ctx, uid int) (*respUser, error) {
 	return &respUser{ID: uid, Name: "TestName"}, nil
 }
 
-func (t *testApi) DataP2(ctx *fiber.Ctx, uid int, name string) (*respUser, error) {
+func (t *testApi) DataP2(ctx *Ctx, uid int, name string) (*respUser, error) {
 	return &respUser{ID: uid, Name: name}, nil
 }
 
-func (t *testApi) DataP1Form(ctx *fiber.Ctx, user *respUser) (*respUser, error) {
+func (t *testApi) DataP1Form(ctx *Ctx, user *respUser) (*respUser, error) {
 	return user, nil
 }
 

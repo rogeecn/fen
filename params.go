@@ -2,7 +2,6 @@ package fen
 
 import (
 	"github.com/go-playground/validator"
-	"github.com/gofiber/fiber/v2"
 )
 
 var validate = validator.New()
@@ -27,8 +26,8 @@ func Validate(in interface{}) []*ErrorResponse {
 	return errors
 }
 
-func Int(key string, errRet BusError) func(*fiber.Ctx) (int, error) {
-	return func(ctx *fiber.Ctx) (int, error) {
+func Int(key string, errRet BusError) func(*Ctx) (int, error) {
+	return func(ctx *Ctx) (int, error) {
 		v, err := ctx.ParamsInt(key)
 		if err != nil {
 			return 0, errRet.Format(key).Wrap(err)
@@ -38,14 +37,14 @@ func Int(key string, errRet BusError) func(*fiber.Ctx) (int, error) {
 	}
 }
 
-func String(key string, errRet BusError) func(*fiber.Ctx) (string, error) {
-	return func(ctx *fiber.Ctx) (string, error) {
+func String(key string, errRet BusError) func(*Ctx) (string, error) {
+	return func(ctx *Ctx) (string, error) {
 		return ctx.Params(key), nil
 	}
 }
 
-func Bind[T any](param T, errRet BusError) func(*fiber.Ctx) (T, error) {
-	return func(ctx *fiber.Ctx) (T, error) {
+func Bind[T any](param T, errRet BusError) func(*Ctx) (T, error) {
+	return func(ctx *Ctx) (T, error) {
 		if err := ctx.BodyParser(param); err != nil {
 			return param, errRet.Wrap(err)
 		}
@@ -58,8 +57,8 @@ func Bind[T any](param T, errRet BusError) func(*fiber.Ctx) (T, error) {
 	}
 }
 
-func Query[T any](param T, errRet BusError) func(*fiber.Ctx) (T, error) {
-	return func(ctx *fiber.Ctx) (T, error) {
+func Query[T any](param T, errRet BusError) func(*Ctx) (T, error) {
+	return func(ctx *Ctx) (T, error) {
 		if err := ctx.QueryParser(param); err != nil {
 			return param, errRet.Wrap(err)
 		}
