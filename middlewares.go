@@ -1,31 +1,44 @@
 package fen
 
 import (
-	"net/http"
-
 	"github.com/gofiber/fiber/v2"
 )
 
 var (
-	ErrProc  func(ctx *Ctx, err BusError) error
-	DataProc func(ctx *Ctx, data interface{}) error
+	ErrProc          func(ctx *Ctx, err error) error
+	DataProc         func(ctx *Ctx, data interface{}) error
+	ErrorConvertProc func(error) BusError
 )
 
 func init() {
 	ErrProc = defaultErrProc
 	DataProc = defaultDataProc
+	ErrorConvertProc = defaultErrorConvert
 }
-func defaultErrProc(ctx *Ctx, err BusError) error {
-	// LOG.Error(err.Stack())
-	return ctx.Status(err.HttpCode).JSON(err.JSON(DebugMode))
+
+func defaultErrProc(ctx *Ctx, err error) error {
+	var busErr BusError
+	switch err.(type) {
+	case BusError:
+		busErr = err.(BusError)
+	default:
+		busErr = ErrorConvertProc(err)
+	}
+
+	logger.Error(busErr.Stack())
+	// _, _ = gin.DefaultErrorWriter.Write([]byte(busErr.Stack()))
+	return ctx.Status(busErr.GetHttpCode()).JSON(busErr.JSON(ctx, DebugMode))
 }
+
 func defaultDataProc(ctx *Ctx, data interface{}) error {
-	return ctx.JSON(JSON{
-		Code:    http.StatusOK,
-		Message: MessageSuccess,
-		Data:    data,
-	})
+	return ctx.JSON(data)
+	// return ctx.JSON(JSON{
+	// 	Code:    http.StatusOK,
+	// 	Message: MessageSuccess,
+	// 	Data:    data,
+	// })
 }
+
 func Func(f func(*Ctx) error) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		ctx := WrapCtx(c)
@@ -36,6 +49,7 @@ func Func(f func(*Ctx) error) fiber.Handler {
 		return DataProc(ctx, nil)
 	}
 }
+
 func Func1[P1 any](
 	f func(*Ctx, P1) error,
 	pf1 func(*Ctx) (P1, error),
@@ -53,6 +67,7 @@ func Func1[P1 any](
 		return DataProc(ctx, nil)
 	}
 }
+
 func Func2[P1 any, P2 any](
 	f func(*Ctx, P1, P2) error,
 	pf1 func(*Ctx) (P1, error),
@@ -75,6 +90,7 @@ func Func2[P1 any, P2 any](
 		return DataProc(ctx, nil)
 	}
 }
+
 func Func3[P1 any, P2 any, P3 any](
 	f func(*Ctx, P1, P2, P3) error,
 	pf1 func(*Ctx) (P1, error),
@@ -102,6 +118,7 @@ func Func3[P1 any, P2 any, P3 any](
 		return DataProc(ctx, nil)
 	}
 }
+
 func Func4[P1 any, P2 any, P3 any, P4 any](
 	f func(*Ctx, P1, P2, P3, P4) error,
 	pf1 func(*Ctx) (P1, error),
@@ -134,6 +151,7 @@ func Func4[P1 any, P2 any, P3 any, P4 any](
 		return DataProc(ctx, nil)
 	}
 }
+
 func Func5[P1 any, P2 any, P3 any, P4 any, P5 any](
 	f func(*Ctx, P1, P2, P3, P4, P5) error,
 	pf1 func(*Ctx) (P1, error),
@@ -171,6 +189,7 @@ func Func5[P1 any, P2 any, P3 any, P4 any, P5 any](
 		return DataProc(ctx, nil)
 	}
 }
+
 func Func6[P1 any, P2 any, P3 any, P4 any, P5 any, P6 any](
 	f func(*Ctx, P1, P2, P3, P4, P5, P6) error,
 	pf1 func(*Ctx) (P1, error),
@@ -213,6 +232,7 @@ func Func6[P1 any, P2 any, P3 any, P4 any, P5 any, P6 any](
 		return DataProc(ctx, nil)
 	}
 }
+
 func DataFunc[T any](f func(*Ctx) (T, error)) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		ctx := WrapCtx(c)
@@ -223,6 +243,7 @@ func DataFunc[T any](f func(*Ctx) (T, error)) fiber.Handler {
 		return DataProc(ctx, data)
 	}
 }
+
 func DataFunc1[T any, P1 any](f func(*Ctx, P1) (T, error), pf1 func(*Ctx) (P1, error)) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		ctx := WrapCtx(c)
@@ -237,6 +258,7 @@ func DataFunc1[T any, P1 any](f func(*Ctx, P1) (T, error), pf1 func(*Ctx) (P1, e
 		return DataProc(ctx, data)
 	}
 }
+
 func DataFunc2[T any, P1 any, P2 any](
 	f func(*Ctx, P1, P2) (T, error),
 	pf1 func(*Ctx) (P1, error),
@@ -259,6 +281,7 @@ func DataFunc2[T any, P1 any, P2 any](
 		return DataProc(ctx, data)
 	}
 }
+
 func DataFunc3[T any, P1 any, P2 any, P3 any](
 	f func(*Ctx, P1, P2, P3) (T, error),
 	pf1 func(*Ctx) (P1, error),
@@ -286,6 +309,7 @@ func DataFunc3[T any, P1 any, P2 any, P3 any](
 		return DataProc(ctx, data)
 	}
 }
+
 func DataFunc4[T any, P1 any, P2 any, P3 any, P4 any](
 	f func(*Ctx, P1, P2, P3, P4) (T, error),
 	pf1 func(*Ctx) (P1, error),
@@ -318,6 +342,7 @@ func DataFunc4[T any, P1 any, P2 any, P3 any, P4 any](
 		return DataProc(ctx, data)
 	}
 }
+
 func DataFunc5[T any, P1 any, P2 any, P3 any, P4 any, P5 any](
 	f func(*Ctx, P1, P2, P3, P4, P5) (T, error),
 	pf1 func(*Ctx) (P1, error),
@@ -355,6 +380,7 @@ func DataFunc5[T any, P1 any, P2 any, P3 any, P4 any, P5 any](
 		return DataProc(ctx, data)
 	}
 }
+
 func DataFunc6[T any, P1 any, P2 any, P3 any, P4 any, P5 any, P6 any](
 	f func(*Ctx, P1, P2, P3, P4, P5, P6) (T, error),
 	pf1 func(*Ctx) (P1, error),

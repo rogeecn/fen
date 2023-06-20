@@ -24,12 +24,9 @@ type respUser struct {
 	Name string `json:"name" form:"name"`
 }
 
-type testApi struct {
-}
+type testApi struct{}
 
-var (
-	Err_Test = NewBusError(http.StatusBadRequest, 1001, "TestErr")
-)
+var Err_Test = NewBusError(http.StatusBadRequest, 1001, "TestErr")
 
 func (t *testApi) Func(ctx *Ctx) error {
 	return Err_Test.Wrap(errors.New("TestStack"))
@@ -87,8 +84,8 @@ func Test_Func_P1(t *testing.T) {
 	ErrParamNotExist := NewBusError(http.StatusBadRequest, 10001, "%d 参数不存在")
 
 	app := fiber.New()
-	app.Get("/step1/:uid", Func1(api.FuncP1, Int("uidd", ErrParamNotExist)))
-	app.Get("/step2/:uid", Func1(api.FuncP1, Int("uid", ErrParamNotExist)))
+	app.Get("/step1/:uid", Func1(api.FuncP1, Integer[int]("uidd", ErrParamNotExist)))
+	app.Get("/step2/:uid", Func1(api.FuncP1, Integer[int]("uid", ErrParamNotExist)))
 
 	req := httptest.NewRequest(http.MethodGet, "/step1/100", nil)
 	rep, err := app.Test(req)
@@ -116,7 +113,6 @@ func Test_DataFunc(t *testing.T) {
 	body, _ := ioutil.ReadAll(rep.Body)
 
 	t.Logf("BODY: %s", body)
-
 }
 
 func Test_DataFunc_P1(t *testing.T) {
@@ -127,8 +123,8 @@ func Test_DataFunc_P1(t *testing.T) {
 	ErrParamNotExist := NewBusError(http.StatusBadRequest, 10001, "%s 参数不存在")
 
 	app := fiber.New()
-	app.Get("/step1/:uid", DataFunc1(api.DataP1, Int("uidd", ErrParamNotExist)))
-	app.Get("/step2/:uid", DataFunc1(api.DataP1, Int("uid", ErrParamNotExist)))
+	app.Get("/step1/:uid", DataFunc1(api.DataP1, Integer[int]("uidd", ErrParamNotExist)))
+	app.Get("/step2/:uid", DataFunc1(api.DataP1, Integer[int]("uid", ErrParamNotExist)))
 
 	req := httptest.NewRequest(http.MethodGet, "/step1/100", nil)
 	rep, err := app.Test(req)
@@ -169,7 +165,7 @@ func Test_DataFunc_P2(t *testing.T) {
 	ErrParamNotExist := NewBusError(http.StatusBadRequest, 10001, "%s 参数不存在")
 
 	app := fiber.New()
-	app.Get("/:uid/:name", DataFunc2(api.DataP2, Int("uid", ErrParamNotExist), String("name", ErrParamNotExist)))
+	app.Get("/:uid/:name", DataFunc2(api.DataP2, Integer[int]("uid", ErrParamNotExist), String("name", ErrParamNotExist)))
 
 	req := httptest.NewRequest(http.MethodGet, "/100/ZhangSan", nil)
 	rep, err := app.Test(req)

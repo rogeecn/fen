@@ -8,7 +8,15 @@ var (
 	DebugMode      = false
 )
 
-var LOG Logger = logrus.New()
+var logger Logger = logrus.New()
+
+func SetLogger(l Logger) {
+	logger = l
+}
+
+func SetDebug(b bool) {
+	DebugMode = b
+}
 
 type Logger interface {
 	Error(args ...interface{})

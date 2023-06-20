@@ -28,11 +28,13 @@ func (b BusError) GetHttpCode() int {
 }
 
 func (b BusError) Format(params ...interface{}) BusError {
-	b.Message = fmt.Sprintf(b.Message, params...)
+	if strings.Contains(b.Message, "%") {
+		b.Message = fmt.Sprintf(b.Message, params...)
+	}
 	return b
 }
 
-func (b BusError) Datas(err interface{}) BusError {
+func (b BusError) SetData(err interface{}) BusError {
 	b.Data = err
 	return b
 }
@@ -55,19 +57,25 @@ func (b BusError) Stack() string {
 }
 
 func (b BusError) StackAsList() []string {
-	return strings.Split(b.Stack(), "\n")
+	stack := strings.ReplaceAll(b.Stack(), "\t", "        ")
+	if stack == "<nil>" {
+		return nil
+	}
+	return strings.Split(stack, "\n")
 }
 
-func (b BusError) JSON(errorStack bool) JSON {
-	data := JSON{
-		Code:    b.ErrCode,
-		Message: b.Message,
-		Data:    nil,
+func (b BusError) JSON(ctx *Ctx, errorStack bool) JsonResponse {
+	var json JsonResponse
+	json = &JSON{}
+
+	if v := ctx.Value(JsonResponseKey); v != nil {
+		json = v.(JsonResponse)
 	}
 
+	json.SetCode(b.ErrCode).SetMessage(b.Message)
 	if errorStack {
-		data.ErrorStack = b.StackAsList()
+		json.SetErrorStack(b.StackAsList())
 	}
 
-	return data
+	return json
 }

@@ -2,6 +2,7 @@ package fen
 
 import (
 	"github.com/go-playground/validator"
+	"golang.org/x/exp/constraints"
 )
 
 var validate = validator.New()
@@ -26,14 +27,13 @@ func Validate(in interface{}) []*ErrorResponse {
 	return errors
 }
 
-func Int(key string, errRet BusError) func(*Ctx) (int, error) {
-	return func(ctx *Ctx) (int, error) {
+func Integer[T constraints.Integer](key string, errRet BusError) func(*Ctx) (T, error) {
+	return func(ctx *Ctx) (T, error) {
 		v, err := ctx.ParamsInt(key)
 		if err != nil {
-			return 0, errRet.Format(key).Wrap(err)
+			return T(0), errRet.Format(key).Wrap(err)
 		}
-
-		return v, nil
+		return T(v), nil
 	}
 }
 
@@ -50,7 +50,7 @@ func Bind[T any](param T, errRet BusError) func(*Ctx) (T, error) {
 		}
 
 		if err := Validate(param); err != nil {
-			return param, errRet.Datas(err)
+			return param, errRet.SetData(err)
 		}
 
 		return param, nil
@@ -64,7 +64,18 @@ func Query[T any](param T, errRet BusError) func(*Ctx) (T, error) {
 		}
 
 		if err := Validate(param); err != nil {
-			return param, errRet.Datas(err)
+			return param, errRet.SetData(err)
+		}
+
+		return param, nil
+	}
+}
+
+func Header[T any](param T, errRet BusError) func(*Ctx) (T, error) {
+	return func(ctx *Ctx) (T, error) {
+		err := ctx.ReqHeaderParser(&param)
+		if err != nil {
+			return param, errRet.Wrap(err)
 		}
 
 		return param, nil

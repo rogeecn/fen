@@ -25,9 +25,11 @@ func (c *Ctx) Deadline() (deadline time.Time, ok bool) {
 func (c *Ctx) Done() <-chan struct{} {
 	return c.Context().Done()
 }
+
 func (c *Ctx) Err() error {
 	return c.Context().Err()
 }
+
 func (c *Ctx) Value(key any) any {
 	return c.Context().Value(key)
 }
