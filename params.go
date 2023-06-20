@@ -43,7 +43,7 @@ func String(key string, errRet BusError) func(*Ctx) (string, error) {
 	}
 }
 
-func Bind[T any](param T, errRet BusError) func(*Ctx) (T, error) {
+func Body[T any](param T, errRet BusError) func(*Ctx) (T, error) {
 	return func(ctx *Ctx) (T, error) {
 		if err := ctx.BodyParser(param); err != nil {
 			return param, errRet.Wrap(err)

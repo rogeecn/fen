@@ -199,8 +199,8 @@ func Test_DataFunc_P1_POST(t *testing.T) {
 	ErrBindParam := NewBusError(http.StatusBadRequest, 10001, "参数绑定失败")
 
 	app := fiber.New()
-	app.Post("/user", DataFunc1(api.DataP1Form, Bind(&respUser{}, ErrBindParam)))
-	app.Post("/user2", DataFunc1(api.DataP1Form, Bind(&respUser{}, ErrBindParam)))
+	app.Post("/user", DataFunc1(api.DataP1Form, Body(&respUser{}, ErrBindParam)))
+	app.Post("/user2", DataFunc1(api.DataP1Form, Body(&respUser{}, ErrBindParam)))
 
 	form := &url.Values{}
 	form.Add("name", "TestName")
