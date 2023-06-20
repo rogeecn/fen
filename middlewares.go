@@ -44,7 +44,7 @@ func Func(f func(*Ctx) error) fiber.Handler {
 		ctx := WrapCtx(c)
 		err := f(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, nil)
 	}
@@ -58,11 +58,11 @@ func Func1[P1 any](
 		ctx := WrapCtx(c)
 		p, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		err = f(ctx, p)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, nil)
 	}
@@ -77,15 +77,15 @@ func Func2[P1 any, P2 any](
 		ctx := WrapCtx(c)
 		p1, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p2, err := pf2(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		err = f(ctx, p1, p2)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, nil)
 	}
@@ -101,19 +101,19 @@ func Func3[P1 any, P2 any, P3 any](
 		ctx := WrapCtx(c)
 		p1, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p2, err := pf2(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p3, err := pf3(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		err = f(ctx, p1, p2, p3)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, nil)
 	}
@@ -130,23 +130,23 @@ func Func4[P1 any, P2 any, P3 any, P4 any](
 		ctx := WrapCtx(c)
 		p1, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p2, err := pf2(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p3, err := pf3(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p4, err := pf4(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		err = f(ctx, p1, p2, p3, p4)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, nil)
 	}
@@ -164,27 +164,27 @@ func Func5[P1 any, P2 any, P3 any, P4 any, P5 any](
 		ctx := WrapCtx(c)
 		p1, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p2, err := pf2(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p3, err := pf3(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p4, err := pf4(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p5, err := pf5(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		err = f(ctx, p1, p2, p3, p4, p5)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, nil)
 	}
@@ -203,31 +203,31 @@ func Func6[P1 any, P2 any, P3 any, P4 any, P5 any, P6 any](
 		ctx := WrapCtx(c)
 		p1, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p2, err := pf2(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p3, err := pf3(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p4, err := pf4(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p5, err := pf5(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p6, err := pf6(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		err = f(ctx, p1, p2, p3, p4, p5, p6)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, nil)
 	}
@@ -238,7 +238,7 @@ func DataFunc[T any](f func(*Ctx) (T, error)) fiber.Handler {
 		ctx := WrapCtx(c)
 		data, err := f(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, data)
 	}
@@ -249,11 +249,11 @@ func DataFunc1[T any, P1 any](f func(*Ctx, P1) (T, error), pf1 func(*Ctx) (P1, e
 		ctx := WrapCtx(c)
 		p, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		data, err := f(ctx, p)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, data)
 	}
@@ -268,15 +268,15 @@ func DataFunc2[T any, P1 any, P2 any](
 		ctx := WrapCtx(c)
 		p1, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p2, err := pf2(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		data, err := f(ctx, p1, p2)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, data)
 	}
@@ -292,19 +292,19 @@ func DataFunc3[T any, P1 any, P2 any, P3 any](
 		ctx := WrapCtx(c)
 		p1, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p2, err := pf2(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p3, err := pf3(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		data, err := f(ctx, p1, p2, p3)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, data)
 	}
@@ -321,23 +321,23 @@ func DataFunc4[T any, P1 any, P2 any, P3 any, P4 any](
 		ctx := WrapCtx(c)
 		p1, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p2, err := pf2(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p3, err := pf3(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p4, err := pf4(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		data, err := f(ctx, p1, p2, p3, p4)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, data)
 	}
@@ -355,27 +355,27 @@ func DataFunc5[T any, P1 any, P2 any, P3 any, P4 any, P5 any](
 		ctx := WrapCtx(c)
 		p1, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p2, err := pf2(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p3, err := pf3(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p4, err := pf4(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p5, err := pf5(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		data, err := f(ctx, p1, p2, p3, p4, p5)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, data)
 	}
@@ -394,31 +394,31 @@ func DataFunc6[T any, P1 any, P2 any, P3 any, P4 any, P5 any, P6 any](
 		ctx := WrapCtx(c)
 		p1, err := pf1(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p2, err := pf2(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p3, err := pf3(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p4, err := pf4(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p5, err := pf5(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		p6, err := pf6(ctx)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		data, err := f(ctx, p1, p2, p3, p4, p5, p6)
 		if err != nil {
-			return ErrProc(ctx, err.(BusError))
+			return ErrProc(ctx, err)
 		}
 		return DataProc(ctx, data)
 	}
