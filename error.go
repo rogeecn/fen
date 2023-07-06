@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
 )
 
@@ -64,18 +65,42 @@ func (b BusError) StackAsList() []string {
 	return strings.Split(stack, "\n")
 }
 
-func (b BusError) JSON(ctx *Ctx, errorStack bool) JsonResponse {
+func (b BusError) JSON(ctx *fiber.Ctx, errorStack bool) JsonResponse {
 	var json JsonResponse
 	json = &JSON{}
 
-	if v := ctx.Value(JsonResponseKey); v != nil {
+	if v := ctx.Locals(JsonResponseKey); v != nil {
 		json = v.(JsonResponse)
 	}
 
-	json.SetCode(b.ErrCode).SetMessage(b.Message)
+	json.SetCode(b.ErrCode).SetMessage(b.Message).SetError(JsonError{
+		Status: statusMap(b.HttpCode),
+		Details: []JsonErrorField{
+			{
+				Field:       "",
+				Description: b.Error(),
+			},
+		},
+	})
 	if errorStack {
 		json.SetErrorStack(b.StackAsList())
 	}
 
 	return json
+}
+
+func statusMap(status int) string {
+	switch status {
+	case http.StatusBadRequest:
+		return "INVALID_ARGUMENT"
+	case http.StatusUnauthorized:
+		return "UNAUTHENTICATED"
+	case http.StatusForbidden:
+		return "PERMISSION_DENIED"
+	case http.StatusNotFound:
+		return "NOT_FOUND"
+	case http.StatusServiceUnavailable:
+		return "UNAVAILABLE"
+	}
+	return "INTERNAL"
 }

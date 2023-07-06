@@ -5,8 +5,8 @@ import (
 )
 
 var (
-	ErrProc          func(ctx *Ctx, err error) error
-	DataProc         func(ctx *Ctx, data interface{}) error
+	ErrProc          func(ctx *fiber.Ctx, err error) error
+	DataProc         func(ctx *fiber.Ctx, data interface{}) error
 	ErrorConvertProc func(error) BusError
 )
 
@@ -16,7 +16,7 @@ func init() {
 	ErrorConvertProc = defaultErrorConvert
 }
 
-func defaultErrProc(ctx *Ctx, err error) error {
+func defaultErrProc(ctx *fiber.Ctx, err error) error {
 	var busErr BusError
 	switch err.(type) {
 	case BusError:
@@ -25,12 +25,12 @@ func defaultErrProc(ctx *Ctx, err error) error {
 		busErr = ErrorConvertProc(err)
 	}
 
-	logger.Error(busErr.Stack())
+	logger.Error(busErr.Error())
 	// _, _ = gin.DefaultErrorWriter.Write([]byte(busErr.Stack()))
 	return ctx.Status(busErr.GetHttpCode()).JSON(busErr.JSON(ctx, DebugMode))
 }
 
-func defaultDataProc(ctx *Ctx, data interface{}) error {
+func defaultDataProc(ctx *fiber.Ctx, data interface{}) error {
 	return ctx.JSON(data)
 	// return ctx.JSON(JSON{
 	// 	Code:    http.StatusOK,
@@ -39,9 +39,8 @@ func defaultDataProc(ctx *Ctx, data interface{}) error {
 	// })
 }
 
-func Func(f func(*Ctx) error) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+func Func(f func(*fiber.Ctx) error) fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
 		err := f(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -51,11 +50,10 @@ func Func(f func(*Ctx) error) fiber.Handler {
 }
 
 func Func1[P1 any](
-	f func(*Ctx, P1) error,
-	pf1 func(*Ctx) (P1, error),
+	f func(*fiber.Ctx, P1) error,
+	pf1 func(*fiber.Ctx) (P1, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -69,12 +67,11 @@ func Func1[P1 any](
 }
 
 func Func2[P1 any, P2 any](
-	f func(*Ctx, P1, P2) error,
-	pf1 func(*Ctx) (P1, error),
-	pf2 func(*Ctx) (P2, error),
+	f func(*fiber.Ctx, P1, P2) error,
+	pf1 func(*fiber.Ctx) (P1, error),
+	pf2 func(*fiber.Ctx) (P2, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p1, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -92,13 +89,12 @@ func Func2[P1 any, P2 any](
 }
 
 func Func3[P1 any, P2 any, P3 any](
-	f func(*Ctx, P1, P2, P3) error,
-	pf1 func(*Ctx) (P1, error),
-	pf2 func(*Ctx) (P2, error),
-	pf3 func(*Ctx) (P3, error),
+	f func(*fiber.Ctx, P1, P2, P3) error,
+	pf1 func(*fiber.Ctx) (P1, error),
+	pf2 func(*fiber.Ctx) (P2, error),
+	pf3 func(*fiber.Ctx) (P3, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p1, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -120,14 +116,13 @@ func Func3[P1 any, P2 any, P3 any](
 }
 
 func Func4[P1 any, P2 any, P3 any, P4 any](
-	f func(*Ctx, P1, P2, P3, P4) error,
-	pf1 func(*Ctx) (P1, error),
-	pf2 func(*Ctx) (P2, error),
-	pf3 func(*Ctx) (P3, error),
-	pf4 func(*Ctx) (P4, error),
+	f func(*fiber.Ctx, P1, P2, P3, P4) error,
+	pf1 func(*fiber.Ctx) (P1, error),
+	pf2 func(*fiber.Ctx) (P2, error),
+	pf3 func(*fiber.Ctx) (P3, error),
+	pf4 func(*fiber.Ctx) (P4, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p1, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -153,15 +148,14 @@ func Func4[P1 any, P2 any, P3 any, P4 any](
 }
 
 func Func5[P1 any, P2 any, P3 any, P4 any, P5 any](
-	f func(*Ctx, P1, P2, P3, P4, P5) error,
-	pf1 func(*Ctx) (P1, error),
-	pf2 func(*Ctx) (P2, error),
-	pf3 func(*Ctx) (P3, error),
-	pf4 func(*Ctx) (P4, error),
-	pf5 func(*Ctx) (P5, error),
+	f func(*fiber.Ctx, P1, P2, P3, P4, P5) error,
+	pf1 func(*fiber.Ctx) (P1, error),
+	pf2 func(*fiber.Ctx) (P2, error),
+	pf3 func(*fiber.Ctx) (P3, error),
+	pf4 func(*fiber.Ctx) (P4, error),
+	pf5 func(*fiber.Ctx) (P5, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p1, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -191,16 +185,15 @@ func Func5[P1 any, P2 any, P3 any, P4 any, P5 any](
 }
 
 func Func6[P1 any, P2 any, P3 any, P4 any, P5 any, P6 any](
-	f func(*Ctx, P1, P2, P3, P4, P5, P6) error,
-	pf1 func(*Ctx) (P1, error),
-	pf2 func(*Ctx) (P2, error),
-	pf3 func(*Ctx) (P3, error),
-	pf4 func(*Ctx) (P4, error),
-	pf5 func(*Ctx) (P5, error),
-	pf6 func(*Ctx) (P6, error),
+	f func(*fiber.Ctx, P1, P2, P3, P4, P5, P6) error,
+	pf1 func(*fiber.Ctx) (P1, error),
+	pf2 func(*fiber.Ctx) (P2, error),
+	pf3 func(*fiber.Ctx) (P3, error),
+	pf4 func(*fiber.Ctx) (P4, error),
+	pf5 func(*fiber.Ctx) (P5, error),
+	pf6 func(*fiber.Ctx) (P6, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p1, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -233,9 +226,8 @@ func Func6[P1 any, P2 any, P3 any, P4 any, P5 any, P6 any](
 	}
 }
 
-func DataFunc[T any](f func(*Ctx) (T, error)) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+func DataFunc[T any](f func(*fiber.Ctx) (T, error)) fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
 		data, err := f(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -244,9 +236,8 @@ func DataFunc[T any](f func(*Ctx) (T, error)) fiber.Handler {
 	}
 }
 
-func DataFunc1[T any, P1 any](f func(*Ctx, P1) (T, error), pf1 func(*Ctx) (P1, error)) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+func DataFunc1[T any, P1 any](f func(*fiber.Ctx, P1) (T, error), pf1 func(*fiber.Ctx) (P1, error)) fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
 		p, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -260,12 +251,11 @@ func DataFunc1[T any, P1 any](f func(*Ctx, P1) (T, error), pf1 func(*Ctx) (P1, e
 }
 
 func DataFunc2[T any, P1 any, P2 any](
-	f func(*Ctx, P1, P2) (T, error),
-	pf1 func(*Ctx) (P1, error),
-	pf2 func(*Ctx) (P2, error),
+	f func(*fiber.Ctx, P1, P2) (T, error),
+	pf1 func(*fiber.Ctx) (P1, error),
+	pf2 func(*fiber.Ctx) (P2, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p1, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -283,13 +273,12 @@ func DataFunc2[T any, P1 any, P2 any](
 }
 
 func DataFunc3[T any, P1 any, P2 any, P3 any](
-	f func(*Ctx, P1, P2, P3) (T, error),
-	pf1 func(*Ctx) (P1, error),
-	pf2 func(*Ctx) (P2, error),
-	pf3 func(*Ctx) (P3, error),
+	f func(*fiber.Ctx, P1, P2, P3) (T, error),
+	pf1 func(*fiber.Ctx) (P1, error),
+	pf2 func(*fiber.Ctx) (P2, error),
+	pf3 func(*fiber.Ctx) (P3, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p1, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -311,14 +300,13 @@ func DataFunc3[T any, P1 any, P2 any, P3 any](
 }
 
 func DataFunc4[T any, P1 any, P2 any, P3 any, P4 any](
-	f func(*Ctx, P1, P2, P3, P4) (T, error),
-	pf1 func(*Ctx) (P1, error),
-	pf2 func(*Ctx) (P2, error),
-	pf3 func(*Ctx) (P3, error),
-	pf4 func(*Ctx) (P4, error),
+	f func(*fiber.Ctx, P1, P2, P3, P4) (T, error),
+	pf1 func(*fiber.Ctx) (P1, error),
+	pf2 func(*fiber.Ctx) (P2, error),
+	pf3 func(*fiber.Ctx) (P3, error),
+	pf4 func(*fiber.Ctx) (P4, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p1, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -344,15 +332,14 @@ func DataFunc4[T any, P1 any, P2 any, P3 any, P4 any](
 }
 
 func DataFunc5[T any, P1 any, P2 any, P3 any, P4 any, P5 any](
-	f func(*Ctx, P1, P2, P3, P4, P5) (T, error),
-	pf1 func(*Ctx) (P1, error),
-	pf2 func(*Ctx) (P2, error),
-	pf3 func(*Ctx) (P3, error),
-	pf4 func(*Ctx) (P4, error),
-	pf5 func(*Ctx) (P5, error),
+	f func(*fiber.Ctx, P1, P2, P3, P4, P5) (T, error),
+	pf1 func(*fiber.Ctx) (P1, error),
+	pf2 func(*fiber.Ctx) (P2, error),
+	pf3 func(*fiber.Ctx) (P3, error),
+	pf4 func(*fiber.Ctx) (P4, error),
+	pf5 func(*fiber.Ctx) (P5, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p1, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)
@@ -382,16 +369,15 @@ func DataFunc5[T any, P1 any, P2 any, P3 any, P4 any, P5 any](
 }
 
 func DataFunc6[T any, P1 any, P2 any, P3 any, P4 any, P5 any, P6 any](
-	f func(*Ctx, P1, P2, P3, P4, P5, P6) (T, error),
-	pf1 func(*Ctx) (P1, error),
-	pf2 func(*Ctx) (P2, error),
-	pf3 func(*Ctx) (P3, error),
-	pf4 func(*Ctx) (P4, error),
-	pf5 func(*Ctx) (P5, error),
-	pf6 func(*Ctx) (P6, error),
+	f func(*fiber.Ctx, P1, P2, P3, P4, P5, P6) (T, error),
+	pf1 func(*fiber.Ctx) (P1, error),
+	pf2 func(*fiber.Ctx) (P2, error),
+	pf3 func(*fiber.Ctx) (P3, error),
+	pf4 func(*fiber.Ctx) (P4, error),
+	pf5 func(*fiber.Ctx) (P5, error),
+	pf6 func(*fiber.Ctx) (P6, error),
 ) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		ctx := WrapCtx(c)
+	return func(ctx *fiber.Ctx) error {
 		p1, err := pf1(ctx)
 		if err != nil {
 			return ErrProc(ctx, err)

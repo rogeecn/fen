@@ -3,16 +3,26 @@ package fen
 const JsonResponseKey = "__fen_JsonResponseKey{}"
 
 type JSON struct {
-	Code       int         `json:"code,omitempty"`
-	Message    string      `json:"message,omitempty"`
-	Data       interface{} `json:"data,omitempty"`
-	ErrorStack []string    `json:"error_stack,omitempty"`
+	Code       int       `json:"code,omitempty"`
+	Message    string    `json:"message,omitempty"`
+	Error      JsonError `json:"error,omitempty"`
+	ErrorStack []string  `json:"error_stack,omitempty"`
+}
+
+type JsonError struct {
+	Status  string           `json:"status,omitempty"`
+	Details []JsonErrorField `json:"details,omitempty"`
+}
+
+type JsonErrorField struct {
+	Field       string `json:"field,omitempty"`
+	Description string `json:"description,omitempty"`
 }
 
 type JsonResponse interface {
 	SetCode(int) JsonResponse
 	SetMessage(string) JsonResponse
-	SetData(interface{}) JsonResponse
+	SetError(JsonError) JsonResponse
 	SetErrorStack([]string) JsonResponse
 }
 
@@ -26,8 +36,8 @@ func (j *JSON) SetMessage(message string) JsonResponse {
 	return j
 }
 
-func (j *JSON) SetData(data interface{}) JsonResponse {
-	j.Data = data
+func (j *JSON) SetError(err JsonError) JsonResponse {
+	j.Error = err
 	return j
 }
 
