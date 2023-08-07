@@ -31,6 +31,9 @@ func defaultErrProc(ctx *fiber.Ctx, err error) error {
 }
 
 func defaultDataProc(ctx *fiber.Ctx, data interface{}) error {
+	if data == nil {
+		return nil
+	}
 	return ctx.JSON(data)
 	// return ctx.JSON(JSON{
 	// 	Code:    http.StatusOK,
