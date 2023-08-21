@@ -85,3 +85,15 @@ func Header[T any](errRet BusError) func(*fiber.Ctx) (*T, error) {
 		return p, nil
 	}
 }
+
+const JwtCtxKey = "__jwtClaims{}"
+
+func JwtClaim[T any](errRet BusError) func(*fiber.Ctx) (*T, error) {
+	return func(ctx *fiber.Ctx) (*T, error) {
+		claim, ok := ctx.Locals(JwtCtxKey).(*T)
+		if !ok {
+			return nil, errRet.Wrap(fiber.ErrUnauthorized)
+		}
+		return claim, nil
+	}
+}
