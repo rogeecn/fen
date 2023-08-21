@@ -9,6 +9,7 @@ var (
 	QueryParamError  = NewBusError(http.StatusBadRequest, http.StatusBadRequest, "query param error")
 	BodyParamError   = NewBusError(http.StatusBadRequest, http.StatusBadRequest, "body param error")
 	HeaderParamError = NewBusError(http.StatusBadRequest, http.StatusBadRequest, "header param error")
+	ClaimParamError  = NewBusError(http.StatusUnauthorized, http.StatusUnauthorized, "claim param error")
 
 	StatusNotFoundErr = NewBusError(http.StatusNotFound, http.StatusNotFound, "resource not found")
 )

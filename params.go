@@ -92,7 +92,7 @@ func JwtClaim[T any](errRet BusError) func(*fiber.Ctx) (*T, error) {
 	return func(ctx *fiber.Ctx) (*T, error) {
 		claim, ok := ctx.Locals(JwtCtxKey).(*T)
 		if !ok {
-			return nil, errRet.Wrap(fiber.ErrUnauthorized)
+			return nil, errRet
 		}
 		return claim, nil
 	}
